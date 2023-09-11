@@ -1,22 +1,15 @@
-//
-//  UserViewModel.swift
-//  ListGenius
-//
-//  Created by Apple  on 11/09/23.
-//
-
 import SwiftUI
 
 class UserViewModel:ObservableObject{
     @AppStorage("LOGIN_STATUS") var LOGIN_STATUS:Bool = false
     
-    //For Login View
+    //MARK: - For Login View
     @Published var emailTxt:String = ""
     @Published var passwordTxt:String = ""
     @Published var showPassword:Bool = true
     
     
-    //Alert
+    //MARK: - Alert
     @Published var showAlert:Bool = false
     @Published var isLoggedIn:Bool = false
     
@@ -56,7 +49,7 @@ class UserViewModel:ObservableObject{
                    }
                }
            }.resume()
-       } 
+       }
 }
 
 

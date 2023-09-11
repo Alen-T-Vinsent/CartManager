@@ -4,17 +4,18 @@ import SwiftUI
 struct HomeView: View {
     @AppStorage("LOGIN_STATUS") var LOGIN_STATUS:Bool = false
     
+    //MARK: - Properties
     @State var showAddItemSheet = false
     @State var showCartSheet = false
     
+    //MARK: - CoreData
     @FetchRequest(sortDescriptors: []) var items: FetchedResults<ItemEntity>
-
     
     var body: some View {
         VStack{
             HStack{
                 Spacer()
-               Text("logout")
+                Text("logout")
                     .onTapGesture {
                         LOGIN_STATUS = false
                     }
@@ -27,14 +28,11 @@ struct HomeView: View {
             
             ScrollView{
                 ForEach(items,id:\.id){ item in
-                    CardView(data: item, name: item.nameAttribute ?? "UNKNOWN", batchId: item.batchNoAttribute ?? "UNKNOWN", image: item.imageAttribute ?? Data())
+                    CardView(name: item.nameAttribute ?? "UNKNOWN", batchId: item.batchNoAttribute ?? "UNKNOWN", image: item.imageAttribute ?? Data())
                         .cornerRadius(10)
                         .padding(.horizontal)
                 }
             }
-            
-            
-            
         }
         .overlay(alignment:.bottomTrailing){
             

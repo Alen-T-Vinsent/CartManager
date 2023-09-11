@@ -4,7 +4,7 @@ import SwiftUI
 struct LoginView: View {
     @EnvironmentObject var userVm:UserViewModel
     
-     var gradient = LinearGradient(gradient: Gradient(colors: [Color.cyan, Color.cyan,Color.purple, Color.purple]), startPoint: .leading, endPoint: .trailing)
+    var gradient = LinearGradient(gradient: Gradient(colors: [Color.cyan, Color.cyan,Color.purple, Color.purple]), startPoint: .leading, endPoint: .trailing)
     var body: some View {
         VStack(spacing:40){
             Image(systemName: "mic")
@@ -65,14 +65,11 @@ struct LoginView: View {
                 }label: {
                     Text("Lost Password?")
                         .font(.subheadline)
-                       
+                    
                 }
                 .foregroundColor(.black)
             }
-                
-
         }
-        
         .actionSheet(isPresented: $userVm.showAlert) {
             ActionSheet(
                 title: Text(userVm.isLoggedIn ? "Login Success" : "Login Failed"),
@@ -88,10 +85,10 @@ struct LoginView: View {
                             }
                         }
                     ),
-                   
+                    
                 ]
             )
         }
-
+        
     }
 }

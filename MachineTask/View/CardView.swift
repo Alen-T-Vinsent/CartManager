@@ -4,12 +4,9 @@ import SwiftUI
 struct CardView: View {
     @EnvironmentObject var userVm:UserViewModel
     
+    //MARK: Propeties
     @State var showStepper:Bool = false
     @State private var quantity = 0
-    
-    var data:ItemEntity
-    
-    //Propeties
     var name:String
     var batchId:String
     var image:Data
@@ -43,7 +40,7 @@ struct CardView: View {
  
             }
             
-            //Stepper and button
+            //MARK: - Stepper and button
             HStack {
                 if showStepper {
                     HStack{

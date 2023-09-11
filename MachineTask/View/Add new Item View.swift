@@ -8,24 +8,21 @@ struct AddItemView:View{
     //MARK: Properties
     @State var name:String = ""
     @State var batchNumber:String = ""
-    
-    //MARK: Userdetails
     @State var image:Data?
+    
     //MARK: ViewProperties
     @Environment(\.dismiss) var dismiss
     @State var showImagePicker:Bool = false
     @State var photoItem:PhotosPickerItem?
-  
+    
     //MARK: CoreData
     @Environment(\.managedObjectContext) var moc
-
+    
     var body: some View{
         VStack(spacing:10){
             Text("Add new item")
                 .font(.largeTitle.bold())
                 .hAlign(.leading)
-            
-        
             //MARK: for small size optimization
             ViewThatFits{
                 ScrollView(.vertical,showsIndicators: false) {
@@ -33,8 +30,6 @@ struct AddItemView:View{
                 }
                 HelperView()
             }
-            
- 
         }
         .vAlign(.top)
         .padding(15)
@@ -79,36 +74,34 @@ struct AddItemView:View{
             }
             .padding(.top,25)
             
-            
+            //MARK: Name Textfield
             TextField("enter your name", text: $name)
                 .border(1, .gray.opacity(0.5))
                 .textContentType(.emailAddress)
                 .padding(.top,25)
                 .disableAutocorrection(true)
-                            .autocapitalization(.none)
-                            
+                .autocapitalization(.none)
+            
+            //MARK: Batch Texfield
             TextField("enter your batch number", text: $batchNumber)
                 .textContentType(.emailAddress)
                 .border(1, .gray.opacity(0.5))
                 .keyboardType(.numberPad)
                 .disableAutocorrection(true)
-                            .autocapitalization(.none)
-                        
-        
-
+                .autocapitalization(.none)
             
+            //MARK: Add Item
             Button {
                 print("Add item btn tapped")
-
+                
                 guard let imageData = image else{
                     return
                 }
                 
                 createItem()
                 print(type(of: imageData))
-
+                
             } label: {
-                //MARK: login button
                 Text("Add Item")
                     .foregroundColor(.white)
                     .hAlign(.center)
@@ -116,19 +109,16 @@ struct AddItemView:View{
             }
             .disableWithOpacity(name == "" ||  batchNumber == "" || image == nil)
             .padding(.top,10)
-            
         }
     }
     
     func createItem(){
-       let item = ItemEntity(context: moc)
+        let item = ItemEntity(context: moc)
         
         item.batchNoAttribute = batchNumber
         item.imageAttribute = image
         item.nameAttribute = name
         
-        print(item)
-
         do {
             try moc.save()
             print("savedSuccess")
@@ -136,10 +126,6 @@ struct AddItemView:View{
         } catch {
             print("Error saving data: \(error)")
         }
-    }
-    
-    func fetchItems(){
-        
     }
     
 }
