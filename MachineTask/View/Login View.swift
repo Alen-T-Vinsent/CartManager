@@ -1,17 +1,10 @@
-//
-//  LoginView.swift
-//  ListGenius
-//
-//  Created by Apple  on 11/09/23.
-//
 
 import SwiftUI
 
 struct LoginView: View {
-    //StateObject
-    @StateObject var userVm = UserViewModel()
+    @EnvironmentObject var userVm:UserViewModel
     
-    @State var gradient = LinearGradient(gradient: Gradient(colors: [Color.cyan, Color.cyan,Color.purple, Color.purple]), startPoint: .leading, endPoint: .trailing)
+     var gradient = LinearGradient(gradient: Gradient(colors: [Color.cyan, Color.cyan,Color.purple, Color.purple]), startPoint: .leading, endPoint: .trailing)
     var body: some View {
         VStack(spacing:40){
             Image(systemName: "mic")
@@ -100,11 +93,5 @@ struct LoginView: View {
             )
         }
 
-    }
-}
-
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

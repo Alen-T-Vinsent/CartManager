@@ -1,93 +1,102 @@
-//
-//  CardView.swift
-//  MachineTask
-//
-//  Created by Apple  on 11/09/23.
-//
 
 import SwiftUI
 
 struct CardView: View {
+    @EnvironmentObject var userVm:UserViewModel
+    
     @State var showStepper:Bool = false
     @State private var quantity = 0
     
+    var data:ItemEntity
+    
+    //Propeties
+    var name:String
+    var batchId:String
+    var image:Data
+    
+    var gradient = LinearGradient(gradient: Gradient(colors: [Color.cyan, Color.cyan,Color.purple, Color.purple]), startPoint: .leading, endPoint: .trailing)
+    
     var body: some View {
         VStack{
-                Text("Alen")
-                    .hAlign(.leading)
-                    .font(.title)
-                Text("Batch number")
-                    .hAlign(.leading)
-                    .onTapGesture {
-                        withAnimation {
-                            showStepper.toggle()
+            HStack{
+                Image(uiImage: UIImage(data: image ) ?? UIImage())
+                    .resizable()
+                    .frame(maxWidth: UIScreen.main.bounds.width/4,maxHeight:UIScreen.main.bounds.width/4)
+                    .cornerRadius(20)
+                
+                
+                VStack{
+                    
+                    Text(name)
+                        .hAlign(.leading).hAlign(.leading)
+                        .font(.title.bold())
+                    
+                    Text(batchId)
+                        .hAlign(.leading)
+                    
+                        .onTapGesture {
+                            withAnimation {
+                                showStepper.toggle()
+                            }
                         }
-                    }
+                }
+ 
+            }
             
             //Stepper and button
-
-            VStack {
-                       if showStepper {
-                           HStack{
-                               Stepper("Quantity: \(quantity)", value: $quantity, in: 0...10)
-                           }
-                              
-                               .frame(maxWidth: UIScreen.main.bounds.width/2,maxHeight:20)
-                               .padding(15)
-                                .foregroundColor(.white)
-                                .background(.orange)
-                                .cornerRadius(10)
-                           
-                       } else {
-                           Button(action: {
-                               withAnimation {
-                                   showStepper.toggle()
-                               }
-                               
-                           }){
-                            Text("Buy Item")
-                                   .frame(maxWidth: UIScreen.main.bounds.width/2)
-                                   .padding(15)
-                                    .foregroundColor(.white)
-                                    .background(.orange)
-                                    .cornerRadius(10)
-                                }
-                       }
+            HStack {
+                if showStepper {
+                    HStack{
+                        Stepper("\(quantity)", value: $quantity, in: 0...20)
+                    }
+                    
+                    .frame(maxWidth: UIScreen.main.bounds.width/2,maxHeight:20)
+                    .padding(15)
+                    .background(.white)
+                    .foregroundColor(.black)
+                    .cornerRadius(10)
+                    
+                } else {
+                    Button(action: {
+                        withAnimation {
+                            showStepper = true
+                        }
+                        
+                    }){
+                        Text("Buy Item")
+                            .frame(maxWidth: UIScreen.main.bounds.width/2)
+                            .padding(15)
+                            .background(.white)
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                    }
+                }
                 
                 
                 Button(action: {
-                    withAnimation {
-                        showStepper.toggle()
+                    if quantity > 0 {
+                        let newCartItem = CartModel(name: name, count: quantity)
+                        userVm.cartItems.append(newCartItem)
+                        quantity = 0
+                        showStepper = false
+                        
                     }
-                    
                 }){
-                 Text("Add to cart")
+                    Text("Add to cart")
                         .frame(maxWidth: UIScreen.main.bounds.width/2)
                         .padding(15)
-                         .foregroundColor(.white)
-                         .background(.orange)
-                         .cornerRadius(10)
-                     }
+                        .foregroundColor(.white)
+                        .background(.orange)
+                        .cornerRadius(10)
+                }
                 
                 
-                   }
+            }
             .hAlign(.center)
-
-            
-            
-            
         }
         .padding()
-        .background(.red)
-        
-        
-       
+        .background(.gray)
     }
     
 }
 
-struct CardView_Previews: PreviewProvider {
-    static var previews: some View {
-        CardView()
-    }
-}

@@ -1,13 +1,7 @@
-//
-//  register.swift
-//  LoveElixir
-//
-//  Created by Apple  on 05/09/23.
-//
 
 import SwiftUI
 import PhotosUI
-
+import CoreData
 
 struct AddItemView:View{
     
@@ -16,12 +10,14 @@ struct AddItemView:View{
     @State var batchNumber:String = ""
     
     //MARK: Userdetails
-    @State var userProfilePicData:Data?
+    @State var image:Data?
     //MARK: ViewProperties
     @Environment(\.dismiss) var dismiss
     @State var showImagePicker:Bool = false
     @State var photoItem:PhotosPickerItem?
   
+    //MARK: CoreData
+    @Environment(\.managedObjectContext) var moc
 
     var body: some View{
         VStack(spacing:10){
@@ -52,7 +48,7 @@ struct AddItemView:View{
                         
                         //MARK: updating ui on main thread
                         await MainActor.run(body: {
-                            userProfilePicData = imageData
+                            image = imageData
                         })
                     }catch{}
                 }
@@ -64,7 +60,7 @@ struct AddItemView:View{
     func HelperView()->some View{
         VStack(spacing:12){
             ZStack{
-                if let userProfilePicData,let image = UIImage(data: userProfilePicData){
+                if let image,let image = UIImage(data: image){
                     Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -94,18 +90,22 @@ struct AddItemView:View{
             TextField("enter your batch number", text: $batchNumber)
                 .textContentType(.emailAddress)
                 .border(1, .gray.opacity(0.5))
+                .keyboardType(.numberPad)
                 .disableAutocorrection(true)
                             .autocapitalization(.none)
+                        
+        
 
             
             Button {
                 print("Add item btn tapped")
 
-                guard let userPic = userProfilePicData else{
+                guard let imageData = image else{
                     return
                 }
                 
-                print(type(of: userPic))
+                createItem()
+                print(type(of: imageData))
 
             } label: {
                 //MARK: login button
@@ -114,64 +114,35 @@ struct AddItemView:View{
                     .hAlign(.center)
                     .fillView(.black)
             }
-            .disableWithOpacity(name == "" ||  batchNumber == "" || userProfilePicData == nil)
+            .disableWithOpacity(name == "" ||  batchNumber == "" || image == nil)
             .padding(.top,10)
             
         }
     }
     
+    func createItem(){
+       let item = ItemEntity(context: moc)
+        
+        item.batchNoAttribute = batchNumber
+        item.imageAttribute = image
+        item.nameAttribute = name
+        
+        print(item)
+
+        do {
+            try moc.save()
+            print("savedSuccess")
+            dismiss()
+        } catch {
+            print("Error saving data: \(error)")
+        }
+    }
+    
+    func fetchItems(){
+        
+    }
     
 }
 
-
-
-//MARK: View extension for UIBuilding
-extension View{
-    
-    //Closing all active keyboards
-    func closeKeyboard(){///when signin or signup pressed active keyboard is closed
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-    
-    //MARK: Disabling with opacity
-    func disableWithOpacity(_ condition:Bool)->some View{
-        self
-            .disabled(condition)
-            .opacity(condition ? 0.6 : 1)
-    }
-    
-    func hAlign(_ alignment:Alignment)->some View{
-        self
-            .frame(maxWidth: .infinity,alignment: alignment)
-    }
-    
-    func vAlign(_ alignment:Alignment)->some View{
-        self
-            .frame(maxHeight: .infinity,alignment: alignment)
-    }
-    
-    //MARK: Custom border view with padding
-    func border(_ width:CGFloat,_ color:Color)->some View{
-        self
-            .padding(.horizontal,15)
-            .padding(.vertical,10)
-            .background{ RoundedRectangle(cornerRadius: 5,style: .continuous)
-                .stroke(color,lineWidth: width)
-                
-            }
-    }
-    
-    //MARK: Custom fill view with padding
-    func fillView(_ color:Color)->some View{
-        self
-            .padding(.horizontal,15)
-            .padding(.vertical,10)
-            .background{ RoundedRectangle(cornerRadius: 5,style: .continuous)
-                .fill(color)
-                
-            }
-    }
-
-}
 
 

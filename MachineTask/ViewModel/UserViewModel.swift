@@ -11,18 +11,17 @@ class UserViewModel:ObservableObject{
     @AppStorage("LOGIN_STATUS") var LOGIN_STATUS:Bool = false
     
     //For Login View
-    @Published var emailTxt:String = "eve.holt@reqres.in"
-    @Published var passwordTxt:String = "cityslicka"
+    @Published var emailTxt:String = ""
+    @Published var passwordTxt:String = ""
     @Published var showPassword:Bool = true
     
     
-   // @Published var paginationData:[PaginationData] = []
-    
     //Alert
     @Published var showAlert:Bool = false
-    @Published var alertMessage:String = ""
-    @Published var alertTitle:String = ""
     @Published var isLoggedIn:Bool = false
+    
+    @Published var cartItems:[CartModel] = [CartModel]()
+    
 
     func login() {
            guard let url = URL(string: "https://reqres.in/api/login") else { return }
@@ -57,23 +56,7 @@ class UserViewModel:ObservableObject{
                    }
                }
            }.resume()
-       }
-    
-//
-//    func fetchPaginationData(completion: @escaping (Bool) -> Void) {
-//        let loginApi = "https://reqres.in/api/login"
-//        WebService.shared.downloadData(fromURL: loginApi) { (response: PaginationData?, error) in
-//            if let _ = response {
-//                print("Successfully fetched Pagination Data")
-//                self.paginationData.append(response!)
-//                completion(true)
-//            } else if let _ = error {
-//                print("Error in fetching Pagination Data")
-//                completion(false)
-//            }
-//        }
-//    }
-
-    
-    
+       } 
 }
+
+
